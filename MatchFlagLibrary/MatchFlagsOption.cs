@@ -3,12 +3,13 @@ using System.Collections.Generic;
 
 namespace MatchFlagLibrary
 {
-    public class MatchFlagOption
+    public class MatchFlagsOption
     {
         private int flagCount;
 
         public string RedisServer { get; set; }
         public int RedisPort { get; set; }
+        public int DefaultKeyExpiration { get; set; }
 
         public int FlagCount
         {
@@ -22,21 +23,14 @@ namespace MatchFlagLibrary
 
         public List<FlagOption> FlagOptions { get; set; }
 
-        public bool IsValid()
+        public static MatchFlagsOption CreateDefault()
         {
-            foreach (var flagOption in FlagOptions)
-                if (flagOption.FlagIndex >= FlagCount || flagOption.ExpectedFlagIndex >= FlagCount)
-                    return false;
-            return true;
-        }
-
-        public static MatchFlagOption CreateDefault()
-        {
-            return new MatchFlagOption
+            return new MatchFlagsOption
             {
                 RedisServer = "127.0.0.1",
                 RedisPort = 6379,
                 flagCount = 1,
+                DefaultKeyExpiration = 18000000,
                 FlagOptions = new List<FlagOption>()
             };
         }
@@ -44,8 +38,7 @@ namespace MatchFlagLibrary
         public void AddFlagOption(int flagIndex,
             int after,
             int expectedFlagIndex,
-            Action<string, int, int, int> ifNotApear,
-            Action<string, int, int, int> ifApear)
+            Action ifNotApear)
         {
             if (FlagOptions == null)
                 FlagOptions = new List<FlagOption>();
@@ -54,17 +47,8 @@ namespace MatchFlagLibrary
                 FlagIndex = flagIndex,
                 After = after,
                 ExpectedFlagIndex = expectedFlagIndex,
-                IfNotApear = ifNotApear,
-                IfApear = ifApear
+                IfNotApear = ifNotApear
             });
-        }
-
-        public void AddFlagOption(int flagIndex,
-            int after,
-            int expectedFlagIndex,
-            Action<string, int, int, int> ifNotApear)
-        {
-            AddFlagOption(flagIndex, after, expectedFlagIndex, ifNotApear, null);
         }
     }
 }

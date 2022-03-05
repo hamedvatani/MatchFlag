@@ -8,4 +8,8 @@
     <PackageReference Include="StackExchange.Redis" Version="2.2.88" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\KeyExpirationReminder\KeyExpirationReminderLibrary\KeyExpirationReminderLibrary.csproj" />
+  </ItemGroup>
+
 </Project>
